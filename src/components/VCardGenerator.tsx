@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import VCard from 'vcard-creator';
 
-const LOGO_URL = '/logo-Marathon-PNG.png';
-
+const LOGO_URL = 'https://marathongroup-git.github.io/vcard/logo.png';
 
 type ContactParams = {
   firstName?: string;
