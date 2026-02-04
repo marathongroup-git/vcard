@@ -120,7 +120,7 @@ export const employees: Employee[] = [
     note: "Analyzing data for insights.",
     photo: "./images/profile-mauricio.jpg",
     color: "#8b9dc3",
-    video: "./videos/example-video.mp4",
+    video: "./videos/video-example.mp4",
   },
   {
     id: "nalvarado",
