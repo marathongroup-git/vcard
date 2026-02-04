@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import VCard from 'vcard-creator';
 import { employees, Employee } from '../data/employees';
@@ -12,13 +13,13 @@ const COLORS = {
 }
 
 const VCardGenerator = () => {
+  const [searchParams] = useSearchParams();
   const [contact, setContact] = useState<Employee | null>(null);
   const [isSaved, setIsSaved] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const employeeId = params.get('id');
+    const employeeId = searchParams.get('id');
 
     if (employeeId) {
       const foundEmployee = employees.find(emp => emp.id === employeeId);
@@ -82,7 +83,6 @@ const VCardGenerator = () => {
 
   const formatPhoneNumber = (phone: string | undefined): string => {
     if (!phone) return '';
-    // Eliminar caracteres no numéricos y agregar el código de país (+52 para México)
     const cleaned = phone.replace(/\D/g, '');
     return cleaned.startsWith('52') ? `+${cleaned}` : `+52${cleaned}`;
   };

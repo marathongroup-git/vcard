@@ -21,7 +21,8 @@ const LinkGenerator = () => {
 
   const basePath = process.env.NODE_ENV === 'production' ? process.env.PUBLIC_URL : '';
   const appRoot = window.location.origin + basePath;
-  const generatedUrl = selectedId ? `${appRoot}/?id=${selectedId}` : '';
+  // Use hash-based URL structure
+  const generatedUrl = selectedId ? `${appRoot}/#/?id=${selectedId}` : '';
 
   const onDownload = async () => {
     if (!selectedId) return;
