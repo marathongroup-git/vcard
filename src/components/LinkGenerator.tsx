@@ -11,7 +11,7 @@ const COLORS = {
   borderColor: 'oklch(89.6% 0 0)',
 };
 
-const LOGO_URL = 'https://marathongroup-git.github.io/vcard/logo.png';
+const LOGO_URL = `${process.env.PUBLIC_URL}/favicons/marathon-logo.png`
 const QR_LOGO = `${process.env.PUBLIC_URL}/favicons/marathon-group-logo.png`;
 
 const LinkGenerator = () => {
