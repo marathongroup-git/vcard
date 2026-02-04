@@ -11,7 +11,6 @@ export interface Employee {
   website: string;
   note: string;
   photo: string; 
-  color: string;
   video?: string; 
 }
 
@@ -29,7 +28,6 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     note: "Project Manager in the tech division.",
     photo: "./images/profile-andrea.jpg",
-    color: "#6d82b3",
   },
   {
     id: "carlos",
@@ -38,13 +36,12 @@ export const employees: Employee[] = [
     company: "Marathon Group",
     jobTitle: "Software Developer",
     email: "carlos.rodriguez@example.com",
-    phone: "55-5555-6666",
-    officePhone: "55-7777-8888",
+    phone: "22-1172-2915",
+    officePhone: "22-1172-2915",
     extension: "102",
     website: "https://www.marathongroup.mx",
     note: "Frontend specialist.",
     photo: "./images/profile-carlos.jpg",
-    color: "#4a6fa5",
     },
   {
     id: "claudia",
@@ -59,7 +56,6 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     note: "Designing user experiences.",
     photo: "./images/profile-claudia.jpg",
-    color: "#a3b1d9",
   },
   {
     id: "griselda",
@@ -74,7 +70,6 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     note: "Ensuring software quality.",
     photo: "./images/profile-griselda.jpg",
-    color: "#5e76a0",
   },
   {
     id: "luisa",
@@ -89,7 +84,6 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     note: "Building robust APIs.",
     photo: "./images/profile-luisa.jpg",
-    color: "#7b93c2",
   },
   {
     id: "manuel",
@@ -104,7 +98,6 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     note: "Infrastructure and deployments.",
     photo: "./images/profile-manuel.jpg",
-    color: "#3b5998",
   },
   {
     id: "mauricio",
@@ -119,7 +112,6 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     note: "Analyzing data for insights.",
     photo: "./images/profile-mauricio.jpg",
-    color: "#8b9dc3",
     video: "./videos/video-example.mp4",
   },
   {
@@ -135,6 +127,5 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     note: "Defining product vision.",
     photo: "./images/profile-natalia.jpg",
-    color: "#dfe3ee",
   },
 ];
