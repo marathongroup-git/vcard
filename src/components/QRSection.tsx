@@ -16,8 +16,8 @@ const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
       qrRef.current.innerHTML = '';
 
       const qrCode = new QRCodeStyling({
-        width: 200,
-        height: 200,
+        width: 350,
+        height: 350,
         data: qrValue,
         margin: 10,
         dotsOptions: {
@@ -37,7 +37,7 @@ const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
         },
         imageOptions: {
           crossOrigin: 'anonymous',
-          imageSize: 0.6, // Reduced image size to decrease margin
+          imageSize: 0.6,
           hideBackgroundDots: true,
         },
         image: logo,
@@ -73,16 +73,9 @@ const QRWrapper = styled.div`
   justify-content: center;
   text-align: center;
   gap: 12px;
-  
-  background: linear-gradient(
-    135deg in oklch, 
-    oklch(98% 0.002 26.43) 0%, 
-    oklch(94% 0.005 26.43) 100%
-  );
-  
   padding: 24px;
   border-radius: 16px; 
-  
+  margin-top: 30px;
   box-shadow: 
     0 4px 6px oklch(0% 0 0 / 0.05),
     0 10px 15px oklch(0% 0 0 / 0.1);
@@ -112,7 +105,6 @@ const QRContainer = styled.div`
   background: white;
   padding: 10px;
   border-radius: 12px;
-
   svg,
   canvas {
     border-radius: 8px;
@@ -134,12 +126,4 @@ const QRBadge = styled.div`
   margin-top: 10px;
 `;
 
-const QRText = styled.p`
-  margin: 10px 0 0 0;
-  font-size: 15px;
-  color: oklch(48.82% 0.211 26.43);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-`;
 export default QRSection;

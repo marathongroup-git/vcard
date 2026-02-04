@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import VCard from 'vcard-creator';
 import { employees, Employee } from '../data/employees';
@@ -11,10 +11,10 @@ const COLORS = {
   marathonRed: 'oklch(48.8% 0.211 26.4)',
 }
 
-const VCardGenerator: React.FC = () => {
-  const [contact, setContact] = React.useState<Employee | null>(null);
-  const [isSaved, setIsSaved] = React.useState(false);
-  const [notFound, setNotFound] = React.useState(false);
+const VCardGenerator = () => {
+  const [contact, setContact] = useState<Employee | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -80,6 +80,13 @@ const VCardGenerator: React.FC = () => {
     setTimeout(() => setIsSaved(false), 3000);
   };
 
+  const formatPhoneNumber = (phone: string | undefined): string => {
+    if (!phone) return '';
+    // Eliminar caracteres no numéricos y agregar el código de país (+52 para México)
+    const cleaned = phone.replace(/\D/g, '');
+    return cleaned.startsWith('52') ? `+${cleaned}` : `+52${cleaned}`;
+  };
+
   if (notFound) {
     return (
       <Container>
@@ -110,7 +117,7 @@ const VCardGenerator: React.FC = () => {
 
   return (
     <>
-      <Container color={contact.color}>
+      <Container>
         <Card>
           <LogoContainer>
             <Logo src={LOGO_URL} alt="Logotipo de Marathon Group" />
@@ -121,9 +128,7 @@ const VCardGenerator: React.FC = () => {
             photo={contact.photo}
             fallbackImage={`${process.env.PUBLIC_URL}/fallback-image.jpg`}
           />
-
           <ContentWrapper>
-
             <InfoSection>
               <Name>{`${contact.firstName || ''} ${contact.lastName || ''}`.trim() || 'Nombre no proporcionado'}
                 {contact.jobTitle && <Detail> {contact.jobTitle}</Detail>}
@@ -152,7 +157,7 @@ const VCardGenerator: React.FC = () => {
             </InfoSection>
 
             <QRSection
-              qrValue={`https://wa.me/${contact.phone?.replace(/\D/g, '') || ''}`}
+              qrValue={`https://wa.me/${formatPhoneNumber(contact.phone)}`}
               logo={LOGO_QR}
               color={COLORS.marathonRed}
             />
@@ -189,7 +194,6 @@ const Card = styled.div`
   max-width: 800px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 40px oklch(0% 0 0 / 30%);
@@ -227,17 +231,17 @@ const InfoSection = styled.div`
 
 const Name = styled.h1`
   margin: 0 0 15px 0;
-  color: oklch(30% 0.1 240);
-  font-size: 32px;
+  color: oklch(30% 0.05 240); 
+  font-size: 28px;
   text-align: center;
-  border-bottom: 2px solid oklch(95% 0.02 90);
-  padding-bottom: 15px;
+  border-bottom: 1px solid oklch(48.8% 0.1 26.4); 
+  padding-bottom: 10px;
 `;
 
 const Detail = styled.p`
   margin: 8px 0;
-  color: oklch(40% 0.05 240); /* Color más oscuro */
-  font-size: 16px; /* Tamaño más grande */
+  color: oklch(40% 0.05 240);
+  font-size: 16px;
   text-align: center;
   line-height: 1.5;
 
@@ -256,11 +260,11 @@ const Detail = styled.p`
 
 const Note = styled.p`
   margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px dashed oklch(90% 0.01 95);
-  color: oklch(50% 0.02 240);
+  padding-top: 10px;
+  border-top: 1px solid oklch(48.8% 0.1 26.4);
+  color: oklch(40% 0.02 240);
   font-style: italic;
-  font-size: 13px;
+  font-size: 14px;
   text-align: center;
 `;
 
@@ -275,29 +279,22 @@ const ActionSection = styled.div`
 `;
 
 const SaveButton = styled.button`
-  background-color: oklch(48.8% 0.211 26.4); /* Rojo corporativo Marathon */
-  color: oklch(100% 0 0); /* Blanco puro para legibilidad máxima */
+  background-color: oklch(48.8% 0.211 26.4);
+  color: oklch(100% 0 0);
   border: none;
   padding: 14px 30px;
   font-size: 16px;
   border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: bold;
-  
-  /* Sombra suave en OKLCH */
-  box-shadow: 0 4px 10px oklch(0% 0 0 / 0.1);
+  cursor: pointer;  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: bold;  box-shadow: 0 4px 10px oklch(0% 0 0 / 0.1);
 
   &:hover {
-    /* Subimos la luminosidad (L) para el efecto de brillo sin perder el tono */
     background-color: oklch(55% 0.211 26.4); 
     transform: translateY(-2px);
-    /* Sombra más profunda al elevarse */
     box-shadow: 0 8px 20px oklch(0% 0 0 / 0.15);
   }
 
   &:active {
-    /* Bajamos la luminosidad para el efecto de pulsado */
     background-color: oklch(40% 0.211 26.4);
     transform: translateY(0);
   }
