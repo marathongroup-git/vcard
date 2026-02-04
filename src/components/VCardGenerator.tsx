@@ -6,7 +6,7 @@ import { employees, Employee } from '../data/employees';
 import PhotoSection from './PhotoSection';
 import QRSection from './QRSection';
 
-const LOGO_URL = 'https://marathongroup-git.github.io/vcard/logo.png';
+const LOGO_URL = `${process.env.PUBLIC_URL}/favicons/marathon-logo.png`
 const LOGO_QR = `${process.env.PUBLIC_URL}/favicons/marathon-group-logo.png`;
 const COLORS = {
   marathonRed: 'oklch(48.8% 0.211 26.4)',
