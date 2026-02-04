@@ -1,81 +1,68 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import VCard from 'vcard-creator';
+import { employees, Employee } from '../data/employees';
+import PhotoSection from './PhotoSection';
+import QRSection from './QRSection';
 
 const LOGO_URL = 'https://marathongroup-git.github.io/vcard/logo.png';
-
-type ContactParams = {
-  firstName?: string;
-  lastName?: string;
-  company?: string;
-  jobTitle?: string;
-  email?: string;
-  phone?: string;          // Teléfono móvil
-  officePhone?: string;    // Nuevo campo para teléfono de oficina
-  extension?: string;      // Nuevo campo para extensión
-  website?: string;
-  address?: string;
-  note?: string;
-  photo?: string;
-  color?: string;
-};
+const LOGO_QR = `${process.env.PUBLIC_URL}/favicons/marathon-group-logo.png`;
+const COLORS = {
+  marathonRed: 'oklch(48.8% 0.211 26.4)',
+}
 
 const VCardGenerator: React.FC = () => {
-  const [contact, setContact] = useState<ContactParams>({});
-  const [isSaved, setIsSaved] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [contact, setContact] = React.useState<Employee | null>(null);
+  const [isSaved, setIsSaved] = React.useState(false);
+  const [notFound, setNotFound] = React.useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const contactData: ContactParams = {
-      firstName: params.get('firstName') || '',
-      lastName: params.get('lastName') || '',
-      company: params.get('company') || '',
-      jobTitle: params.get('jobTitle') || '',
-      email: params.get('email') || '',
-      phone: params.get('phone') || '',          // Móvil
-      officePhone: params.get('officePhone') || '',  // Teléfono oficina
-      extension: params.get('extension') || '',      // Extensión
-      website: params.get('website') || '',
-      address: params.get('address') || '',
-      note: params.get('note') || '',
-      photo: params.get('photo') || '',
-      color: params.get('color') || '#4a6fa5',
-    };
-    setContact(contactData);
+    const employeeId = params.get('id');
+
+    if (employeeId) {
+      const foundEmployee = employees.find(emp => emp.id === employeeId);
+
+      if (foundEmployee) {
+        setContact({
+          ...foundEmployee,
+          photo: `${process.env.PUBLIC_URL}/${foundEmployee.photo}`,
+          video: foundEmployee.video ? `${process.env.PUBLIC_URL}/${foundEmployee.video}` : undefined,
+        });
+        setNotFound(false);
+
+        document.title = `${foundEmployee.firstName} ${foundEmployee.lastName} - Contacto`;
+      } else {
+        setNotFound(true);
+
+        document.title = 'Empleado no encontrado';
+      }
+    } else {
+      setNotFound(true);
+
+      document.title = 'Generador de vCard';
+    }
   }, []);
 
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-    setImageError(false);
-  };
-
-  const handleImageError = () => {
-    setImageLoaded(false);
-    setImageError(true);
-  };
 
   const generateVCard = () => {
+    if (!contact) return;
     const vcard = new VCard();
     vcard.addName(contact.lastName || '', contact.firstName || '');
     if (contact.company) vcard.addCompany(contact.company);
     if (contact.jobTitle) vcard.addJobtitle(contact.jobTitle);
     if (contact.email) vcard.addEmail(contact.email);
-    
-    // Teléfono móvil
+
     if (contact.phone) vcard.addPhoneNumber(contact.phone, 'CELL');
-    
-    // Teléfono de oficina con extensión
+
     if (contact.officePhone) {
-      const officePhoneWithExt = contact.extension 
+      const officePhoneWithExt = contact.extension
         ? `${contact.officePhone} x${contact.extension}`
         : contact.officePhone;
       vcard.addPhoneNumber(officePhoneWithExt, 'WORK');
     }
 
     if (contact.website) vcard.addURL(contact.website);
-    if (contact.address) vcard.addAddress(contact.address);
     if (contact.note) vcard.addNote(contact.note);
     if (contact.photo) vcard.addPhoto(contact.photo);
 
@@ -93,96 +80,119 @@ const VCardGenerator: React.FC = () => {
     setTimeout(() => setIsSaved(false), 3000);
   };
 
-  const getInitials = () => {
-    const first = contact.firstName ? contact.firstName.charAt(0) : '';
-    const last = contact.lastName ? contact.lastName.charAt(0) : '';
-    return `${first}${last}` || '?';
-  };
+  if (notFound) {
+    return (
+      <Container>
+        <Card>
+          <InfoSection>
+            <Name>Empleado no encontrado</Name>
+            <Detail>Por favor, verifica que el `id` en la URL sea correcto.</Detail>
+            <Detail>Ejemplo: `?id=carlos`</Detail>
+          </InfoSection>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (!contact) {
+    return (
+      <Container>
+        <Card>
+          <InfoSection>
+            <Name>Bienvenido</Name>
+            <Detail>Proporciona el `id` de un empleado en la URL para generar su vCard.</Detail>
+            <Detail>Ejemplo: `?id=carlos`</Detail>
+          </InfoSection>
+        </Card>
+      </Container>
+    );
+  }
 
   return (
-    <Container color={contact.color}>
-      <Card>
-        <LogoContainer>
-          <Logo src={LOGO_URL} alt="Logotipo" />
-        </LogoContainer>
+    <>
+      <Container color={contact.color}>
+        <Card>
+          <LogoContainer>
+            <Logo src={LOGO_URL} alt="Logotipo de Marathon Group" />
+          </LogoContainer>
 
-        <PhotoSection>
-          {contact.photo ? (
-            <>
-              <ProfileImage 
-                src={contact.photo} 
-                alt={`${contact.firstName} ${contact.lastName}`}
-                onLoad={handleImageLoad}
-                onError={handleImageError}
-                style={{ display: imageLoaded ? 'block' : 'none' }}
-              />
-              {(!imageLoaded || imageError) && (
-                <InitialsCircle>{getInitials()}</InitialsCircle>
+          <PhotoSection
+            video={contact.video}
+            photo={contact.photo}
+            fallbackImage={`${process.env.PUBLIC_URL}/fallback-image.jpg`}
+          />
+
+          <ContentWrapper>
+
+            <InfoSection>
+              <Name>{`${contact.firstName || ''} ${contact.lastName || ''}`.trim() || 'Nombre no proporcionado'}
+                {contact.jobTitle && <Detail> {contact.jobTitle}</Detail>}
+              </Name>
+
+              {contact.company && <Detail> {contact.company}</Detail>}
+              {contact.email && <Detail><a href={`mailto:${contact.email}`}>{contact.email}</a></Detail>}
+
+              {contact.officePhone && (
+                <Detail>
+                  Teléfono: <a href={`tel:${contact.officePhone}`}>{contact.officePhone}</a>
+                  {contact.extension && <span> x{contact.extension}</span>}
+                </Detail>
               )}
-            </>
-          ) : (
-            <InitialsCircle>{getInitials()}</InitialsCircle>
-          )}
-        </PhotoSection>
 
-        <InfoSection>
-          <Name>{`${contact.firstName || ''} ${contact.lastName || ''}`.trim() || 'Nombre no proporcionado'}
-            {contact.jobTitle && <Detail> {contact.jobTitle}</Detail>}
-          </Name>
-          
-         
-          {contact.company && <Detail> {contact.company}</Detail>}
-          {contact.email && <Detail> {contact.email}</Detail>}
-          
-          {/* Teléfono de oficina con extensión */}
-          {contact.officePhone && (
-            <Detail>
-              Teléfono: {contact.officePhone}
-              {contact.extension && <span> x{contact.extension}</span>}
-            </Detail>
-          )}
-          
-          {/* Teléfono móvil */}
-          {contact.phone && <Detail>Móvil: {contact.phone}</Detail>}
-          
-          {contact.website && <Detail> {contact.website}</Detail>}
-          {contact.address && <Detail>{contact.address}</Detail>}
-          {contact.note && <Note>{contact.note}</Note>}
-        </InfoSection>
+              {contact.phone && <Detail>Móvil: <a href={`tel:${contact.phone}`}>{contact.phone}</a></Detail>}
 
-        <ActionSection>
-          <SaveButton onClick={generateVCard} disabled={isSaved}>
-            {isSaved ? '✓ Guardado' : 'Guardar Contacto'}
-          </SaveButton>
-          <Hint>Se descargará un archivo .vcf que puedes importar a tus contactos</Hint>
-        </ActionSection>
-      </Card>
-    </Container>
+              {contact.website && (
+                <Detail>
+                  <a href={contact.website} target="_blank" rel="noopener noreferrer">
+                    {contact.website.replace(/(^\w+:|^)\/\//, '')}
+                  </a>
+                </Detail>
+              )}
+              {contact.note && <Note>{contact.note}</Note>}
+            </InfoSection>
+
+            <QRSection
+              qrValue={`https://wa.me/${contact.phone?.replace(/\D/g, '') || ''}`}
+              logo={LOGO_QR}
+              color={COLORS.marathonRed}
+            />
+          </ContentWrapper>
+
+          <ActionSection>
+            <SaveButton onClick={generateVCard} disabled={isSaved}>
+              {isSaved ? '✓ Guardado' : 'Guardar Contacto'}
+            </SaveButton>
+            <Hint>Se descargará un archivo .vcf que puedes importar a tus contactos</Hint>
+          </ActionSection>
+        </Card>
+      </Container>
+    </>
   );
 };
-
-// Estilos (se mantienen igual que en la versión anterior)
+// Estilos
 const Container = styled.div<{ color?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, ${props => props.color || '#4a6fa5'} 0%, #2c3e50 100%);
+  background: linear-gradient(135deg, oklch(97.41% 0 0) 0%, oklch(91.04% 0 0) 100%);
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: oklch(20% 0.05 240);
 `;
 
 const Card = styled.div`
   background: white;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px oklch(0% 0 0 / 20%);
   width: 100%;
-  max-width: 500px;
+  max-width: 800px;
   overflow: hidden;
-  transition: transform 0.3s ease;
-  
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
   &:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 40px oklch(0% 0 0 / 30%);
   }
 `;
 
@@ -190,8 +200,8 @@ const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
   padding: 30px 0;
-  background-color: white;
-  border-bottom: 1px solid #f0f0f0;
+  background-color: oklch(100% 0 0);
+  border-bottom: 1px solid oklch(95% 0.05 90);
 `;
 
 const Logo = styled.img`
@@ -200,109 +210,119 @@ const Logo = styled.img`
   object-fit: contain;
 `;
 
-const PhotoSection = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 0;
-  background-color: #f8f9fa;
-  position: relative;
-`;
-
-const ProfileImage = styled.img`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 5px solid white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-`;
-
-const InitialsCircle = styled.div`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background-color: #e9ecef;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 48px;
-  font-weight: bold;
-  color: #495057;
-  border: 5px solid white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-`;
 
 const InfoSection = styled.div`
-  padding: 30px;
+  padding: 0 20px 0 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 768px) {
+    padding: 0;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+  }
 `;
 
 const Name = styled.h1`
-  margin: 0 0 20px 0;
-  color: #2c3e50;
-  font-size: 28px;
+  margin: 0 0 15px 0;
+  color: oklch(30% 0.1 240);
+  font-size: 32px;
   text-align: center;
-  border-bottom: 2px solid #f1f3f5;
+  border-bottom: 2px solid oklch(95% 0.02 90);
   padding-bottom: 15px;
 `;
 
 const Detail = styled.p`
-  margin: 10px 0;
-  color: #495057;
-  font-size: 16px;
-  
-  strong {
-    color: #2c3e50;
-    margin-right: 8px;
+  margin: 8px 0;
+  color: oklch(40% 0.05 240); /* Color más oscuro */
+  font-size: 16px; /* Tamaño más grande */
+  text-align: center;
+  line-height: 1.5;
+
+  a {
+    color: ${COLORS.marathonRed};
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
+
 const Note = styled.p`
-  margin-top: 25px;
+  margin-top: 15px;
   padding-top: 15px;
-  border-top: 1px dashed #dee2e6;
-  color: #6c757d;
+  border-top: 1px dashed oklch(90% 0.01 95);
+  color: oklch(50% 0.02 240);
   font-style: italic;
-  font-size: 14px;
+  font-size: 13px;
+  text-align: center;
 `;
+
+
 
 const ActionSection = styled.div`
   padding: 25px;
-  background-color: #f8f9fa;
+  background-color: oklch(97% 0 0);
   text-align: center;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid oklch(95% 0.05 90);
+  border-top: 1px dashed oklch(90% 0.01 95);
 `;
 
 const SaveButton = styled.button`
-  background-color:rgb(230, 25, 25);
-  color: white;
+  background-color: oklch(48.8% 0.211 26.4); /* Rojo corporativo Marathon */
+  color: oklch(100% 0 0); /* Blanco puro para legibilidad máxima */
   border: none;
   padding: 14px 30px;
   font-size: 16px;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   
+  /* Sombra suave en OKLCH */
+  box-shadow: 0 4px 10px oklch(0% 0 0 / 0.1);
+
   &:hover {
-    background-color: #1891414;
+    /* Subimos la luminosidad (L) para el efecto de brillo sin perder el tono */
+    background-color: oklch(55% 0.211 26.4); 
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    /* Sombra más profunda al elevarse */
+    box-shadow: 0 8px 20px oklch(0% 0 0 / 0.15);
   }
-  
-  &:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+
+  &:active {
+    /* Bajamos la luminosidad para el efecto de pulsado */
+    background-color: oklch(40% 0.211 26.4);
+    transform: translateY(0);
   }
 `;
 
 const Hint = styled.p`
   margin-top: 15px;
   font-size: 13px;
-  color: #6c757d;
+  color: oklch(50% 0.02 240);
+  font-style: italic;
+`;
+const ContentWrapper = styled.div`
+  display: flex;
+  gap: 35px;
+  padding: 25px 30px;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    align-items: center;
+    text-align: center;
+  }
 `;
 
 export default VCardGenerator;

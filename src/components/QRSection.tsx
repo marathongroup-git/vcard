@@ -1,0 +1,145 @@
+import React, { useEffect, useRef } from 'react';
+import styled from 'styled-components';
+import QRCodeStyling from 'qr-code-styling';
+
+interface QRSectionProps {
+  qrValue: string;
+  logo: string;
+  color: string;
+}
+
+const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
+  const qrRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (qrRef.current) {
+      qrRef.current.innerHTML = '';
+
+      const qrCode = new QRCodeStyling({
+        width: 200,
+        height: 200,
+        data: qrValue,
+        margin: 10,
+        dotsOptions: {
+          color: color,
+          type: 'dots',
+        },
+        cornersSquareOptions: {
+          color: color,
+          type: 'extra-rounded',
+        },
+        cornersDotOptions: {
+          color: color,
+          type: 'dot',
+        },
+        backgroundOptions: {
+          color: 'none',
+        },
+        imageOptions: {
+          crossOrigin: 'anonymous',
+          imageSize: 0.6, // Reduced image size to decrease margin
+          hideBackgroundDots: true,
+        },
+        image: logo,
+      });
+
+      qrCode.append(qrRef.current);
+    }
+  }, [qrValue, logo, color]);
+
+return (
+    <QRWrapper>
+      <QRContainer ref={qrRef} />
+      
+      <QRBadge>
+        <svg 
+          width="16" 
+          height="16" 
+          fill="currentColor" 
+          viewBox="0 0 16 16"
+          style={{ marginRight: '4px' }}
+        >
+          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+        </svg>
+        Iniciar conversación
+      </QRBadge>
+    </QRWrapper>
+  );
+};
+const QRWrapper = styled.div`
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  
+  background: linear-gradient(
+    135deg in oklch, 
+    oklch(98% 0.002 26.43) 0%, 
+    oklch(94% 0.005 26.43) 100%
+  );
+  
+  padding: 24px;
+  border-radius: 16px; 
+  
+  box-shadow: 
+    0 4px 6px oklch(0% 0 0 / 0.05),
+    0 10px 15px oklch(0% 0 0 / 0.1);
+    
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 20px 25px oklch(0% 0 0 / 0.15);
+    
+    outline: 2px solid oklch(48.82% 0.211 26.43 / 0.3);
+  }
+
+  @media (max-width: 768px) {
+    padding: 5px;
+    gap: 5px;
+    align-items: center;
+    text-align: center;
+  }
+`;
+
+const QRContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+
+  svg,
+  canvas {
+    border-radius: 8px;
+    width: 180px !important;
+    height: 180px !important;
+  }
+`;
+const QRBadge = styled.div`
+  background-color: oklch(48.82% 0.211 26.43);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px oklch(48.82% 0.211 26.43 / 20%);
+  margin-top: 10px;
+`;
+
+const QRText = styled.p`
+  margin: 10px 0 0 0;
+  font-size: 15px;
+  color: oklch(48.82% 0.211 26.43);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`;
+export default QRSection;
