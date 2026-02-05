@@ -64,7 +64,7 @@ const LinkGenerator = () => {
         type: 'dot',
       },
       backgroundOptions: {
-        color: 'oklch(0% 0 0)',
+        color: 'transparent',
       },
       imageOptions: {
         crossOrigin: 'anonymous',
@@ -79,48 +79,13 @@ const LinkGenerator = () => {
         const blob = await tempQr.getRawData('png');
         if (!blob) return;
 
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.src = URL.createObjectURL(blob as Blob);
-        
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-            
-            const qrSize = 1000;
-            const padding = 100;
-            const textSectionHeight = 400;
-            
-            canvas.width = qrSize + (padding * 2);
-            canvas.height = qrSize + (padding * 2) + textSectionHeight;
-            
-            ctx.fillStyle = 'oklch(0% 0 0)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.drawImage(img, padding, padding, qrSize, qrSize);
-            
-            ctx.textAlign = 'center';
-            
-            ctx.font = 'bold 70px "Segoe UI", Arial, sans-serif'; 
-            ctx.fillStyle = 'oklch(100% 0 0)';
-            ctx.fillText(`${employee.firstName} ${employee.lastName}`, canvas.width / 2, qrSize + padding + 150);
-            
-            ctx.font = '40px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = 'oklch(84.8% 0 0)';
-            ctx.fillText(employee.jobTitle.toUpperCase(), canvas.width / 2, qrSize + padding + 230);
+        const url = URL.createObjectURL(blob as Blob);
+        const link = document.createElement('a');
+        link.download = `vcard-${employee.id}-${employee.firstName}.png`;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
 
-            ctx.font = '30px "Segoe UI", Arial, sans-serif';
-            ctx.fillStyle = COLORS.marathonRed;
-            ctx.fillText("www.marathongroup.mx", canvas.width / 2, qrSize + padding + 320);
-            
-            const link = document.createElement('a');
-            link.download = `vcard-${employee.id}-${employee.firstName}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            
-            URL.revokeObjectURL(img.src);
-        };
     } catch (err) {
         console.error("Error generating QR for download", err);
     }
