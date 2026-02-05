@@ -26,8 +26,7 @@ export const employees: Employee[] = [
     officePhone: "22-2690-6700",
     extension: "2114",
     website: "https://www.marathongroup.mx",
-    note: "Project Manager in the tech division.",
-    photo: "./images/profile-andrea.jpg",
+    photo: "./images/profile-chernandez.jpg",
   },
   {
     id: "acuautle",
@@ -40,8 +39,7 @@ export const employees: Employee[] = [
     officePhone: "22-2690-6700",
     extension: "2194",
     website: "https://www.marathongroup.mx",
-    note: "Frontend specialist.",
-    photo: "./images/profile-arturo.jpg",
+    photo: "./images/profile-acuautle.jpg",
     },
   {
     id: "jcromero",
@@ -54,8 +52,7 @@ export const employees: Employee[] = [
     officePhone: "22-2690-6700",
     extension: "2144",
     website: "https://www.marathongroup.mx",
-    note: "Designing user experiences.",
-    photo: "./images/profile-claudia.jpg",
+    photo: "./images/profile-jcromero.jpg",
   },
   {
     id: "eramirez",
@@ -68,8 +65,7 @@ export const employees: Employee[] = [
     officePhone: "22-2690-6700",
     extension: "2106",
     website: "https://www.marathongroup.mx",
-    note: "Ensuring software quality.",
-    photo: "./images/profile-elizabeth.jpg",
+    photo: "./images/profile-eramirez.jpg",
   },
   {
     id: "lbravo",
@@ -82,8 +78,7 @@ export const employees: Employee[] = [
     officePhone: "22-2690-6700",
     extension: "2110",
     website: "https://www.marathongroup.mx",
-    note: "Building robust APIs.",
-    photo: "./images/profile-luisa.jpg",
+    photo: "./images/profile-lbravo.jpg",
   },
   {
     id: "gcarrera",
@@ -96,8 +91,7 @@ export const employees: Employee[] = [
     officePhone: "22-2690-6700",
     extension: "2120",
     website: "https://www.marathongroup.mx",
-    note: "Infrastructure and deployments.",
-    photo: "./images/profile-griselda.jpg",
+    photo: "./images/profile-gcarrera.jpg",
   },
   {
     id: "cislas",
@@ -110,8 +104,6 @@ export const employees: Employee[] = [
     officePhone: "22-2690-6700",
     extension: "2107",
     website: "https://www.marathongroup.mx",
-    note: "Analyzing data for insights.",
-    photo: "./images/profile-claudia.jpg",
-    video: "./videos/video-example.mp4",
+    photo: "./images/profile-cislas.jpg",
   },
 ];
