@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import QRCodeStyling from 'qr-code-styling';
 import { employees } from '../data/employees';
