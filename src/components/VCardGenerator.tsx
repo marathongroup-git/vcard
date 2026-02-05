@@ -57,13 +57,11 @@ const VCardGenerator = () => {
     if (contact.phone) vcard.addPhoneNumber(contact.phone, 'CELL');
 
     if (contact.officePhone) {
-      // Guardamos el teléfono limpio para que los celulares lo reconozcan como número válido
       vcard.addPhoneNumber(contact.officePhone, 'WORK');
     }
 
     if (contact.website) vcard.addURL(contact.website);
     
-    // Movemos la extensión a las notas para que no corrompa el número telefónico
     const noteParts = [];
     if (contact.extension) noteParts.push(`Ext: ${contact.extension}`);
     if (contact.note) noteParts.push(contact.note);
@@ -72,16 +70,13 @@ const VCardGenerator = () => {
     
     if (contact.photo) {
       try {
-        // Obtenemos la imagen original
         const response = await fetch(contact.photo);
         const blob = await response.blob();
         
-        // Creamos un elemento imagen para manipular Dimensions
         const img = new Image();
         img.src = URL.createObjectURL(blob);
         await new Promise((resolve) => (img.onload = resolve));
 
-        // Redimensionamos a un tamaño razonable para vCard (max 300x300 px)
         const maxWidth = 300;
         const maxHeight = 300;
         let width = img.width;
@@ -105,11 +100,10 @@ const VCardGenerator = () => {
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(img, 0, 0, width, height);
 
-        // Convertimos a JPEG con calidad media para reducir tamaño (esencial para móviles)
         const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
         const base64 = dataUrl.split(',')[1];
         
-        console.log('vCard Image Size:', Math.round(base64.length / 1024), 'KB'); // Log para depuración
+        console.log('vCard Image Size:', Math.round(base64.length / 1024), 'KB');
         vcard.addPhoto(base64, 'JPEG');
       } catch (error) {
         console.error('Error embedding photo in vCard:', error);
@@ -118,9 +112,6 @@ const VCardGenerator = () => {
 
     const vcardString = vcard.toString();
     
-    // Solución para compatibilidad móvil:
-    // 1. Usamos text/x-vcard que es más aceptado en Android/iOS antiguo
-    // 2. Eliminamos el BOM (\ufeff) que puede confundir a algunos parsers móviles
     const blob = new Blob([vcardString], { type: 'text/x-vcard' });
     const url = URL.createObjectURL(blob);
 
@@ -139,7 +130,8 @@ const VCardGenerator = () => {
   const formatPhoneNumber = (phone: string | undefined): string => {
     if (!phone) return '';
     const cleaned = phone.replace(/\D/g, '');
-    return cleaned.startsWith('52') ? `+${cleaned}` : `+52${cleaned}`;
+    // WhatsApp API recomienda formato internacional SIN símbolo '+' (ej: 521234567890)
+    return cleaned.startsWith('52') ? cleaned : `52${cleaned}`;
   };
 
   if (notFound) {
