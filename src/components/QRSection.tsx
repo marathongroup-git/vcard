@@ -35,6 +35,11 @@ const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
         backgroundOptions: {
           color: 'none',
         },
+        qrOptions: {
+          typeNumber: 0,
+          mode: 'Byte',
+          errorCorrectionLevel: 'H',
+        },
         imageOptions: {
           crossOrigin: 'anonymous',
           imageSize: 0.6,

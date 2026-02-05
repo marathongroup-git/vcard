@@ -9,7 +9,7 @@ declare module 'vcard-creator' {
     addAddress(address?: string): this;
     addURL(url: string): this;
     addNote(note: string): this;
-    addPhoto(url: string): this;
+    addPhoto(data: string, type?: string): this;
     toString(): string;
   }
 

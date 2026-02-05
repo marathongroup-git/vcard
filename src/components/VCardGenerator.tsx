@@ -36,17 +36,17 @@ const VCardGenerator = () => {
       } else {
         setNotFound(true);
 
-        document.title = 'Empleado no encontrado';
+        document.title = 'Colaborador no encontrado';
       }
     } else {
-      setNotFound(true);
+      setNotFound(false);
 
-      document.title = 'Generador de vCard';
+      document.title = 'Tarjetas Digitales Marathon';
     }
-  }, []);
+  }, [searchParams]);
 
 
-  const generateVCard = () => {
+  const generateVCard = async () => {
     if (!contact) return;
     const vcard = new VCard();
     vcard.addName(contact.lastName || '', contact.firstName || '');
@@ -57,17 +57,71 @@ const VCardGenerator = () => {
     if (contact.phone) vcard.addPhoneNumber(contact.phone, 'CELL');
 
     if (contact.officePhone) {
-      const officePhoneWithExt = contact.extension
-        ? `${contact.officePhone} x${contact.extension}`
-        : contact.officePhone;
-      vcard.addPhoneNumber(officePhoneWithExt, 'WORK');
+      // Guardamos el teléfono limpio para que los celulares lo reconozcan como número válido
+      vcard.addPhoneNumber(contact.officePhone, 'WORK');
     }
 
     if (contact.website) vcard.addURL(contact.website);
-    if (contact.note) vcard.addNote(contact.note);
-    if (contact.photo) vcard.addPhoto(contact.photo);
+    
+    // Movemos la extensión a las notas para que no corrompa el número telefónico
+    const noteParts = [];
+    if (contact.extension) noteParts.push(`Ext: ${contact.extension}`);
+    if (contact.note) noteParts.push(contact.note);
+    
+    if (noteParts.length > 0) vcard.addNote(noteParts.join('\n'));
+    
+    if (contact.photo) {
+      try {
+        // Obtenemos la imagen original
+        const response = await fetch(contact.photo);
+        const blob = await response.blob();
+        
+        // Creamos un elemento imagen para manipular Dimensions
+        const img = new Image();
+        img.src = URL.createObjectURL(blob);
+        await new Promise((resolve) => (img.onload = resolve));
 
-    const blob = new Blob([vcard.toString()], { type: 'text/vcard' });
+        // Redimensionamos a un tamaño razonable para vCard (max 300x300 px)
+        const maxWidth = 300;
+        const maxHeight = 300;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Convertimos a JPEG con calidad media para reducir tamaño (esencial para móviles)
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        const base64 = dataUrl.split(',')[1];
+        
+        console.log('vCard Image Size:', Math.round(base64.length / 1024), 'KB'); // Log para depuración
+        vcard.addPhoto(base64, 'JPEG');
+      } catch (error) {
+        console.error('Error embedding photo in vCard:', error);
+      }
+    }
+
+    const vcardString = vcard.toString();
+    
+    // Solución para compatibilidad móvil:
+    // 1. Usamos text/x-vcard que es más aceptado en Android/iOS antiguo
+    // 2. Eliminamos el BOM (\ufeff) que puede confundir a algunos parsers móviles
+    const blob = new Blob([vcardString], { type: 'text/x-vcard' });
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement('a');
@@ -76,6 +130,7 @@ const VCardGenerator = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 3000);
@@ -92,9 +147,9 @@ const VCardGenerator = () => {
       <Container>
         <Card>
           <InfoSection>
-            <Name>Empleado no encontrado</Name>
-            <Detail>Por favor, verifica que el `id` en la URL sea correcto.</Detail>
-            <Detail>Ejemplo: `?id=carlos`</Detail>
+            <Name>Perfil no disponible</Name>
+            <Detail>La tarjeta que intentas consultar no existe o el enlace es incorrecto.</Detail>
+            <Detail>Por favor verifica la dirección URL.</Detail>
           </InfoSection>
         </Card>
       </Container>
@@ -105,10 +160,13 @@ const VCardGenerator = () => {
     return (
       <Container>
         <Card>
+          <LogoContainer>
+             <Logo src={LOGO_URL} alt="Logotipo de Marathon Group" />
+          </LogoContainer>
           <InfoSection>
-            <Name>Bienvenido</Name>
-            <Detail>Proporciona el `id` de un empleado en la URL para generar su vCard.</Detail>
-            <Detail>Ejemplo: `?id=carlos`</Detail>
+            <Name>Tarjetas Digitales</Name>
+            <Detail>Bienvenido al sistema de tarjetas de contacto de Marathon Group.</Detail>
+            <Detail>Por favor utiliza el enlace personalizado o escanea el código QR de un colaborador.</Detail>
           </InfoSection>
         </Card>
       </Container>
@@ -130,44 +188,44 @@ const VCardGenerator = () => {
           />
           <ContentWrapper>
             <InfoSection>
-              <Name>{`${contact.firstName || ''} ${contact.lastName || ''}`.trim() || 'Nombre no proporcionado'}
-                {contact.jobTitle && <Detail> {contact.jobTitle}</Detail>}
-              </Name>
+              <Name>{`${contact.firstName || ''} ${contact.lastName || ''}`.trim() || 'Nombre no proporcionado'}</Name>
+              
+              {contact.jobTitle && <JobTitle>{contact.jobTitle}</JobTitle>}
 
-              {contact.company && <Detail> {contact.company}</Detail>}
+              {contact.company && <Detail><strong>{contact.company}</strong></Detail>}
               {contact.email && <Detail><a href={`mailto:${contact.email}`}>{contact.email}</a></Detail>}
 
               {contact.officePhone && (
                 <Detail>
-                  Teléfono: <a href={`tel:${contact.officePhone}`}>{contact.officePhone}</a>
-                  {contact.extension && <span> x{contact.extension}</span>}
+                  Oficina: <a href={`tel:${contact.officePhone}`}>{contact.officePhone}</a>
+                  {contact.extension && <span> Ext. {contact.extension}</span>}
                 </Detail>
               )}
-
-              {contact.phone && <Detail>Móvil: <a href={`tel:${contact.phone}`}>{contact.phone}</a></Detail>}
-
+              {contact.phone && <Detail>Celular: <a href={`tel:${contact.phone}`}>{contact.phone}</a></Detail>}
               {contact.website && (
                 <Detail>
                   <a href={contact.website} target="_blank" rel="noopener noreferrer">
-                    {contact.website.replace(/(^\w+:|^)\/\//, '')}
+                    marathongroup.mx
                   </a>
                 </Detail>
               )}
               {contact.note && <Note>{contact.note}</Note>}
             </InfoSection>
 
-            <QRSection
-              qrValue={`https://wa.me/${formatPhoneNumber(contact.phone)}`}
-              logo={LOGO_QR}
-              color={COLORS.marathonRed}
-            />
+            <QRContainer>
+              <QRSection
+                qrValue={`https://wa.me/${formatPhoneNumber(contact.phone)}`}
+                logo={LOGO_QR}
+                color={COLORS.marathonRed}
+              />
+            </QRContainer>
           </ContentWrapper>
 
           <ActionSection>
             <SaveButton onClick={generateVCard} disabled={isSaved}>
-              {isSaved ? '✓ Guardado' : 'Guardar Contacto'}
+              {isSaved ? '✓ Agregado' : 'Añadir a Contactos'}
             </SaveButton>
-            <Hint>Se descargará un archivo .vcf que puedes importar a tus contactos</Hint>
+            <Hint>Descarga el perfil para guardarlo en tu agenda</Hint>
           </ActionSection>
         </Card>
       </Container>
@@ -205,7 +263,7 @@ const LogoContainer = styled.div`
   justify-content: center;
   padding: 30px 0;
   background-color: oklch(100% 0 0);
-  border-bottom: 1px solid oklch(95% 0.05 90);
+  border-bottom: ${COLORS.marathonRed} 1px solid;
 `;
 
 const Logo = styled.img`
@@ -230,12 +288,21 @@ const InfoSection = styled.div`
 `;
 
 const Name = styled.h1`
-  margin: 0 0 15px 0;
+  margin: 0 0 10px 0;
   color: oklch(30% 0.05 240); 
   font-size: 28px;
   text-align: center;
-  border-bottom: 1px solid oklch(48.8% 0.1 26.4); 
-  padding-bottom: 10px;
+`;
+
+const JobTitle = styled.h2`
+  margin: 0 0 15px 0;
+  color: oklch(45% 0.05 240);
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  border-bottom: 2px solid ${COLORS.marathonRed};
+  padding-bottom: 15px;
+  width: 100%;
 `;
 
 const Detail = styled.p`
@@ -261,7 +328,7 @@ const Detail = styled.p`
 const Note = styled.p`
   margin-top: 15px;
   padding-top: 10px;
-  border-top: 1px solid oklch(48.8% 0.1 26.4);
+  border-top: 1px solid ${COLORS.marathonRed};
   color: oklch(40% 0.02 240);
   font-style: italic;
   font-size: 14px;
@@ -270,16 +337,31 @@ const Note = styled.p`
 
 
 
+const QRCaption = styled.p`
+  margin-top: 10px;
+  font-size: 12px;
+  color: oklch(50% 0.02 240);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+const QRContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const ActionSection = styled.div`
   padding: 25px;
-  background-color: oklch(97% 0 0);
+  background-color: oklch(100% 0 0);
   text-align: center;
-  border-top: 1px solid oklch(95% 0.05 90);
-  border-top: 1px dashed oklch(90% 0.01 95);
+  border-top: 1px solid ${COLORS.marathonRed};
+  border-top: 0.5px solid ${COLORS.marathonRed};
 `;
 
 const SaveButton = styled.button`
-  background-color: oklch(48.8% 0.211 26.4);
+  background-color: ${COLORS.marathonRed};
   color: oklch(100% 0 0);
   border: none;
   padding: 14px 30px;
@@ -287,25 +369,23 @@ const SaveButton = styled.button`
   border-radius: 50px;
   cursor: pointer;  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: bold;  box-shadow: 0 4px 10px oklch(0% 0 0 / 0.1);
-
   &:hover {
-    background-color: oklch(55% 0.211 26.4); 
+    filter: brightness(1.1);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px oklch(0% 0 0 / 0.15);
   }
-
   &:active {
-    background-color: oklch(40% 0.211 26.4);
+    filter: brightness(0.9);
     transform: translateY(0);
   }
 `;
-
 const Hint = styled.p`
   margin-top: 15px;
   font-size: 13px;
   color: oklch(50% 0.02 240);
   font-style: italic;
 `;
+
 const ContentWrapper = styled.div`
   display: flex;
   gap: 35px;

@@ -44,7 +44,7 @@ const PhotoSectionContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: 30px 0;
-  background-color: #f8f9fa;
+  background-color: oklch(100% 0 0);
   position: relative;
 `;
 
@@ -54,8 +54,8 @@ const VideoContainer = styled.div`
   height: 150px;
   border-radius: 50%;
   overflow: hidden;
-  border: 5px solid white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 5px solid oklch(100% 0 0);
+  box-shadow: 0 4px 15px oklch(0% 0 0 / 0.1);
 `;
 
 const VideoElement = styled.video`
@@ -69,8 +69,8 @@ const ProfileImage = styled.img`
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 5px solid white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 5px solid oklch(100% 0 0);
+  box-shadow: 0 4px 15px oklch(0% 0 0 / 0.1);
   transition: transform 0.3s ease;
 `;
 
