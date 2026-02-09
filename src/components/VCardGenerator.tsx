@@ -39,31 +39,59 @@ const VCardGenerator = () => {
         document.title = 'Colaborador no encontrado';
       }
     } else {
-      // Soporte para URLs antiguas (Legacy) que pasan parámetros por query string
-      const firstName = searchParams.get('firstName');
-      const lastName = searchParams.get('lastName');
+      const urlEmail = searchParams.get('email');
+      const urlPhone = searchParams.get('phone');
+      let matchedEmployee: Employee | undefined;
 
-      if (firstName || lastName) {
+      if (urlEmail || urlPhone) {
+        const cleanUrlPhone = urlPhone ? urlPhone.replace(/\D/g, '') : '';
+        
+        matchedEmployee = employees.find(emp => {
+          const matchEmail = urlEmail && emp.email && emp.email.toLowerCase() === urlEmail.toLowerCase();
+          // Comparar teléfonos solo si ambos tienen longitud suficiente para evitar falsos positivos (ej. extensiones cortas)
+          const cleanEmpPhone = emp.phone ? emp.phone.replace(/\D/g, '') : '';
+          const matchPhone = cleanUrlPhone.length > 6 && cleanEmpPhone === cleanUrlPhone;
+          
+          return matchEmail || matchPhone;
+        });
+      }
+
+      if (matchedEmployee) {
+        // Si encontramos al empleado por sus datos, mostramos su perfil OFICIAL (con foto nueva, etc.)
         setContact({
-          id: 'legacy-contact',
-          firstName: firstName || '',
-          lastName: lastName || '',
-          company: searchParams.get('company') || '',
-          jobTitle: searchParams.get('jobTitle') || '',
-          email: searchParams.get('email') || '',
-          phone: searchParams.get('phone') || undefined,
-          officePhone: searchParams.get('officePhone') || '',
-          extension: searchParams.get('extension') || '',
-          website: searchParams.get('website') || '',
-          photo: searchParams.get('photo') || '',
-          note: searchParams.get('note') || undefined,
+          ...matchedEmployee,
+          photo: `${process.env.PUBLIC_URL}/${matchedEmployee.photo}`,
+          video: matchedEmployee.video ? `${process.env.PUBLIC_URL}/${matchedEmployee.video}` : undefined,
         });
         setNotFound(false);
-        document.title = `${firstName} ${lastName} - Contacto`;
+        document.title = `${matchedEmployee.firstName} ${matchedEmployee.lastName} - Contacto`;
       } else {
-        setNotFound(false);
+        // 2. Si NO existe en la base de datos, construimos un perfil temporal con los datos de la URL (Legacy)
+        const firstName = searchParams.get('firstName');
+        const lastName = searchParams.get('lastName');
 
-        document.title = 'Tarjetas Digitales Marathon';
+        if (firstName || lastName) {
+          setContact({
+            id: 'legacy-contact',
+            firstName: firstName || '',
+            lastName: lastName || '',
+            company: searchParams.get('company') || '',
+            jobTitle: searchParams.get('jobTitle') || '',
+            email: searchParams.get('email') || '',
+            phone: searchParams.get('phone') || undefined,
+            officePhone: searchParams.get('officePhone') || '',
+            extension: searchParams.get('extension') || '',
+            website: searchParams.get('website') || '',
+            photo: searchParams.get('photo') || '',
+            note: searchParams.get('note') || undefined,
+          });
+          setNotFound(false);
+          document.title = `${firstName} ${lastName} - Contacto`;
+        } else {
+          setNotFound(false);
+
+          document.title = 'Tarjetas Digitales Marathon';
+        }
       }
     }
   }, [searchParams]);
