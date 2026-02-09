@@ -39,9 +39,32 @@ const VCardGenerator = () => {
         document.title = 'Colaborador no encontrado';
       }
     } else {
-      setNotFound(false);
+      // Soporte para URLs antiguas (Legacy) que pasan parámetros por query string
+      const firstName = searchParams.get('firstName');
+      const lastName = searchParams.get('lastName');
 
-      document.title = 'Tarjetas Digitales Marathon';
+      if (firstName || lastName) {
+        setContact({
+          id: 'legacy-contact',
+          firstName: firstName || '',
+          lastName: lastName || '',
+          company: searchParams.get('company') || '',
+          jobTitle: searchParams.get('jobTitle') || '',
+          email: searchParams.get('email') || '',
+          phone: searchParams.get('phone') || undefined,
+          officePhone: searchParams.get('officePhone') || '',
+          extension: searchParams.get('extension') || '',
+          website: searchParams.get('website') || '',
+          photo: searchParams.get('photo') || '',
+          note: searchParams.get('note') || undefined,
+        });
+        setNotFound(false);
+        document.title = `${firstName} ${lastName} - Contacto`;
+      } else {
+        setNotFound(false);
+
+        document.title = 'Tarjetas Digitales Marathon';
+      }
     }
   }, [searchParams]);
 

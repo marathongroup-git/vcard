@@ -42,7 +42,7 @@ const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
         },
         imageOptions: {
           crossOrigin: 'anonymous',
-          imageSize: 0.4, // Reducido de 0.6 a 0.4 para mejorar legibilidad del QR y evitar errores de lectura
+          imageSize: 0.4,
           hideBackgroundDots: true,
         },
         image: logo,
