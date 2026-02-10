@@ -18,8 +18,13 @@ const VCardGenerator = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
+  // Helper para leer parámetros tanto del HashRouter (URL nueva) como del navegador (URL antigua sin hash)
+  const getParam = (key: string) => {
+    return searchParams.get(key) || new URLSearchParams(window.location.search).get(key);
+  };
+
   useEffect(() => {
-    const employeeId = searchParams.get('id');
+    const employeeId = getParam('id'); // Usamos getParam en lugar de searchParams.get
 
     if (employeeId) {
       const foundEmployee = employees.find(emp => emp.id === employeeId);
@@ -39,8 +44,9 @@ const VCardGenerator = () => {
         document.title = 'Colaborador no encontrado';
       }
     } else {
-      const urlEmail = searchParams.get('email');
-      const urlPhone = searchParams.get('phone');
+      // 1. Intento de recuperación: Buscar en la BD actual usando Email o Teléfono de la URL vieja
+      const urlEmail = getParam('email');
+      const urlPhone = getParam('phone');
       let matchedEmployee: Employee | undefined;
 
       if (urlEmail || urlPhone) {
@@ -67,23 +73,23 @@ const VCardGenerator = () => {
         document.title = `${matchedEmployee.firstName} ${matchedEmployee.lastName} - Contacto`;
       } else {
         // 2. Si NO existe en la base de datos, construimos un perfil temporal con los datos de la URL (Legacy)
-        const firstName = searchParams.get('firstName');
-        const lastName = searchParams.get('lastName');
+        const firstName = getParam('firstName');
+        const lastName = getParam('lastName');
 
         if (firstName || lastName) {
           setContact({
             id: 'legacy-contact',
             firstName: firstName || '',
             lastName: lastName || '',
-            company: searchParams.get('company') || '',
-            jobTitle: searchParams.get('jobTitle') || '',
-            email: searchParams.get('email') || '',
-            phone: searchParams.get('phone') || undefined,
-            officePhone: searchParams.get('officePhone') || '',
-            extension: searchParams.get('extension') || '',
-            website: searchParams.get('website') || '',
-            photo: searchParams.get('photo') || '',
-            note: searchParams.get('note') || undefined,
+            company: getParam('company') || '',
+            jobTitle: getParam('jobTitle') || '',
+            email: getParam('email') || '',
+            phone: getParam('phone') || undefined,
+            officePhone: getParam('officePhone') || '',
+            extension: getParam('extension') || '',
+            website: getParam('website') || '',
+            photo: getParam('photo') || '',
+            note: getParam('note') || undefined,
           });
           setNotFound(false);
           document.title = `${firstName} ${lastName} - Contacto`;
