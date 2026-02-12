@@ -1,0 +1,8 @@
+{
+  "label": "Instalación y Despliegue",
+  "position": 2,
+  "link": {
+    "type": "doc",
+    "id": "instalacion-despliegue/entorno-local"
+  }
+}

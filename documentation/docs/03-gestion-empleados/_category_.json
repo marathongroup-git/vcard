@@ -1,0 +1,8 @@
+{
+  "label": "Gestión de Empleados",
+  "position": 3,
+  "link": {
+    "type": "doc",
+    "id": "gestion-empleados/configuracion"
+  }
+}

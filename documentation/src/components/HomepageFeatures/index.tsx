@@ -11,32 +11,32 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Generación Rápida',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Genera tarjetas de presentación digitales instantáneamente para todo tu equipo
+        sin complicaciones.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Códigos QR',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Crea códigos QR escaneables para compartir información de contacto de manera
+        fácil, moderna y sin contacto.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Gestión de Datos',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Administra la información de los empleados desde una fuente centralizada y
+        mantenla siempre actualizada.
       </>
     ),
   },
