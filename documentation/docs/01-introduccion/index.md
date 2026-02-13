@@ -38,14 +38,6 @@ Este proyecto está construido con un stack tecnológico moderno para asegurar r
 *   **VCard:** `vcard-creator` para la estandarización de archivos de contacto.
 *   **Documentación:** [Docusaurus](https://docusaurus.io/) (lo que estás leyendo ahora).
 
-## 📚 ¿Por dónde empezar?
-
-Dependiendo de tu rol, te recomendamos visitar las siguientes secciones:
-
-*   **Administradores:** Comienza configurando los datos en [Gestión de Empleados](../gestion-empleados/configuracion).
-*   **Diseñadores/RRHH:** Aprende a exportar los códigos en [Generación de Recursos](../generacion/panel-generador).
-*   **Desarrolladores:** Revisa la arquitectura en [Desarrollo y Componentes](../componentes/biblioteca).
-
 ## 🛟 Soporte y Mantenimiento
 
 Este proyecto es mantenido por el equipo de **Sistemas de Marathon Group**.
@@ -53,5 +45,5 @@ Este proyecto es mantenido por el equipo de **Sistemas de Marathon Group**.
 Para dudas técnicas, reportar errores o solicitar nuevas funcionalidades, por favor contactar a:
 
 *   **Departamento de Sistemas**
-*   📧 Email: [sistemas@marathon.com](mailto:sistemas@marathon.com)
+*   📧 Email: [sistemas@marathon.com](mailto:sistemas@marathongroup.mx)
 
