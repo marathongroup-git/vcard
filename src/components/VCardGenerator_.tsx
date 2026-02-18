@@ -225,7 +225,6 @@ const Detail = styled.p`
   margin: 8px 0;
   color: #495057;
   font-size: 16px;
-  
   strong {
     color: #2c3e50;
     margin-right: 5px;

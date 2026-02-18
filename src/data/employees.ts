@@ -5,7 +5,7 @@ export interface Employee {
   company: string;
   jobTitle: string;
   email: string;
-  phone?: string;
+  phone: string;
   officePhone: string;
   extension: string;
   website: string;
@@ -105,5 +105,18 @@ export const employees: Employee[] = [
     extension: "2107",
     website: "https://www.marathongroup.mx",
     photo: "./images/profile-cislas.jpg",
+  },
+  {
+    id: "carredondo",
+    firstName: "Cesar Antonio",
+    lastName: "Arredondo Rodriguez",
+    company: "Marathon Group",
+    jobTitle: "Ejecutivo de Ventas Externas",
+    email: "carredondo@marathongroup.mx",
+    phone: "44-2389-5914",
+    officePhone: "44-4738-7843",
+    extension: " 131",
+    website: "https://www.marathongroup.mx",
+    photo: "./images/profile-carredondo.png",
   },
 ];

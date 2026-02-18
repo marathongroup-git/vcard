@@ -18,13 +18,12 @@ const VCardGenerator = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
-  // Helper para leer parámetros tanto del HashRouter (URL nueva) como del navegador (URL antigua sin hash)
   const getParam = (key: string) => {
     return searchParams.get(key) || new URLSearchParams(window.location.search).get(key);
   };
 
   useEffect(() => {
-    const employeeId = getParam('id'); // Usamos getParam en lugar de searchParams.get
+    const employeeId = getParam('id');
 
     if (employeeId) {
       const foundEmployee = employees.find(emp => emp.id === employeeId);
@@ -44,7 +43,6 @@ const VCardGenerator = () => {
         document.title = 'Colaborador no encontrado';
       }
     } else {
-      // 1. Intento de recuperación: Buscar en la BD actual usando Email o Teléfono de la URL vieja
       const urlEmail = getParam('email');
       const urlPhone = getParam('phone');
       let matchedEmployee: Employee | undefined;
@@ -54,7 +52,6 @@ const VCardGenerator = () => {
         
         matchedEmployee = employees.find(emp => {
           const matchEmail = urlEmail && emp.email && emp.email.toLowerCase() === urlEmail.toLowerCase();
-          // Comparar teléfonos solo si ambos tienen longitud suficiente para evitar falsos positivos (ej. extensiones cortas)
           const cleanEmpPhone = emp.phone ? emp.phone.replace(/\D/g, '') : '';
           const matchPhone = cleanUrlPhone.length > 6 && cleanEmpPhone === cleanUrlPhone;
           
@@ -63,7 +60,6 @@ const VCardGenerator = () => {
       }
 
       if (matchedEmployee) {
-        // Si encontramos al empleado por sus datos, mostramos su perfil OFICIAL (con foto nueva, etc.)
         setContact({
           ...matchedEmployee,
           photo: `${process.env.PUBLIC_URL}/${matchedEmployee.photo}`,
@@ -72,7 +68,6 @@ const VCardGenerator = () => {
         setNotFound(false);
         document.title = `${matchedEmployee.firstName} ${matchedEmployee.lastName} - Contacto`;
       } else {
-        // 2. Si NO existe en la base de datos, construimos un perfil temporal con los datos de la URL (Legacy)
         const firstName = getParam('firstName');
         const lastName = getParam('lastName');
 
@@ -84,7 +79,7 @@ const VCardGenerator = () => {
             company: getParam('company') || '',
             jobTitle: getParam('jobTitle') || '',
             email: getParam('email') || '',
-            phone: getParam('phone') || undefined,
+            phone: getParam('phone') || '',
             officePhone: getParam('officePhone') || '',
             extension: getParam('extension') || '',
             website: getParam('website') || '',
