@@ -26,7 +26,7 @@ export const employees: Employee[] = [
     officePhone: "22-2690-6700",
     extension: "2114",
     website: "https://www.marathongroup.mx",
-    photo: "./images/profile-chernandez.jpg",
+    photo: "./images/profile-chernandez.png",
   },
   {
     id: "acuautle",
