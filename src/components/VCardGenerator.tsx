@@ -229,6 +229,7 @@ const VCardGenerator = () => {
             video={contact.video}
             photo={contact.photo}
             fallbackImage={`${process.env.PUBLIC_URL}/fallback-image.jpg`}
+            employeeId={contact.id}
           />
           <ContentWrapper>
             <InfoSection>

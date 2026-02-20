@@ -5,9 +5,11 @@ interface PhotoSectionProps {
   video?: string;
   photo?: string;
   fallbackImage: string;
+  employeeId?: string;
 }
 
-const PhotoSection: React.FC<PhotoSectionProps> = ({ video, photo, fallbackImage }) => {
+const PhotoSection: React.FC<PhotoSectionProps> = ({ video, photo, fallbackImage, employeeId }) => {
+  const isChernandez = employeeId === 'chernandez';
   return (
     <PhotoSectionContainer>
       {video ? (
@@ -28,6 +30,7 @@ const PhotoSection: React.FC<PhotoSectionProps> = ({ video, photo, fallbackImage
         <ProfileImage
           src={photo}
           alt="Foto de perfil"
+          className={isChernandez ? 'chernandez-photo' : ''}
           onError={(e) => {
             console.error('Error loading image:', photo, e);
           }}
@@ -50,8 +53,8 @@ const PhotoSectionContainer = styled.div`
 
 const VideoContainer = styled.div`
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   overflow: hidden;
   border: 5px solid oklch(100% 0 0);
@@ -65,13 +68,18 @@ const VideoElement = styled.video`
 `;
 
 const ProfileImage = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   object-fit: cover;
   border: 5px solid oklch(100% 0 0);
   box-shadow: 0 4px 15px oklch(0% 0 0 / 0.1);
   transition: transform 0.3s ease;
+
+  &.chernandez-photo {
+    object-position: center 10%;
+    margin-top: 0;
+  }
 `;
 
 export default PhotoSection;
