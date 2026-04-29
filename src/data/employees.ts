@@ -6,7 +6,7 @@ export interface Employee {
   jobTitle: string;
   email: string;
   phone: string;
-  officePhone: string;
+  officePhone?: string;
   extension: string;
   website: string;
   note?: string;
@@ -118,5 +118,17 @@ export const employees: Employee[] = [
     extension: " 131",
     website: "https://www.marathongroup.mx",
     photo: "./images/profile-carredondo.png",
+  },
+  {
+    id: "jbadillo",
+    firstName: "Janitzio",
+    lastName: "Badillo Lozano",
+    company: "Marathon Group",
+    jobTitle: "Dirección",
+    email: "jbadillo@marathongroup.mx",
+    phone: "(222) 320-6478",
+    extension: " 131",
+    website: "https://www.marathongroup.mx",
+    photo: "./images/marathon-group-logo.png",
   },
 ];

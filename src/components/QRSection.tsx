@@ -26,7 +26,7 @@ const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
         },
         cornersSquareOptions: {
           color: color,
-          type: 'extra-rounded',
+          type: 'square',
         },
         cornersDotOptions: {
           color: color,
