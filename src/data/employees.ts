@@ -142,4 +142,15 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     photo: "./images/marathon-group-logo.png",
   },
+  {
+    id: "marketing",
+    firstName: "Lic. Cecilia",
+    lastName: "Bandala Pelcastre",
+    company: "Marathon Group",
+    jobTitle: "Auxiliar de Marketing",
+    email: "marketing@marathongroup.mx",
+    phone: "(222) 599 2540",
+    website: "https://www.marathongroup.mx",
+    photo: "./images/marathon-group-logo.png",
+  },
 ];
