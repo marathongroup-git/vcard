@@ -153,4 +153,15 @@ export const employees: Employee[] = [
     website: "https://www.marathongroup.mx",
     photo: "./images/marathon-group-logo.png",
   },
+    {
+    id: "pescalante",
+    firstName: "Lic. Paula",
+    lastName: "Escalante Aguilar",
+    company: "Marathon Group",
+    jobTitle: "Gerente de Recursos Humanos",
+    email: "pescalante@marathongroup.mx",
+    phone: "(222) 365 3899",
+    website: "https://www.marathongroup.mx",
+    photo: "./images/marathon-group-logo.png",
+  },
 ];
