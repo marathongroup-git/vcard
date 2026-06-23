@@ -16,17 +16,17 @@ const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
       qrRef.current.innerHTML = '';
 
       const qrCode = new QRCodeStyling({
-        width: 350,
-        height: 350,
+        width: 230,
+        height: 230,
         data: qrValue,
-        margin: 10,
+        margin: 8,
         dotsOptions: {
           color: color,
           type: 'dots',
         },
         cornersSquareOptions: {
           color: color,
-          type: 'square',
+          type: 'extra-rounded',
         },
         cornersDotOptions: {
           color: color,
@@ -42,7 +42,7 @@ const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
         },
         imageOptions: {
           crossOrigin: 'anonymous',
-          imageSize: 0.4,
+          imageSize: 0.5,
           hideBackgroundDots: true,
         },
         image: logo,
@@ -52,19 +52,19 @@ const QRSection: React.FC<QRSectionProps> = ({ qrValue, logo, color }) => {
     }
   }, [qrValue, logo, color]);
 
-return (
+  return (
     <QRWrapper>
       <QRContainer ref={qrRef} />
-      
-      <QRBadge>
-        <svg 
-          width="16" 
-          height="16" 
-          fill="currentColor" 
+
+      <QRBadge href={qrValue} target="_blank" rel="noopener noreferrer">
+        <svg
+          width="16"
+          height="16"
+          fill="currentColor"
           viewBox="0 0 16 16"
           style={{ marginRight: '4px' }}
         >
-          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
         </svg>
         Iniciar conversación
       </QRBadge>
@@ -77,28 +77,19 @@ const QRWrapper = styled.div`
   align-items: center; 
   justify-content: center;
   text-align: center;
-  gap: 12px;
-  padding: 24px;
-  border-radius: 16px; 
-  margin-top: 30px;
-  box-shadow: 
-    0 4px 6px oklch(0% 0 0 / 0.05),
-    0 10px 15px oklch(0% 0 0 / 0.1);
+  gap: 10px;
+  padding: 0;
     
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 20px 25px oklch(0% 0 0 / 0.15);
-    
-    outline: 2px solid oklch(48.82% 0.211 26.43 / 0.3);
+    svg, canvas {
+      filter: brightness(1.05);
+    }
   }
 
   @media (max-width: 768px) {
-    padding: 5px;
-    gap: 5px;
-    align-items: center;
-    text-align: center;
+    gap: 8px;
   }
 `;
 
@@ -108,27 +99,37 @@ const QRContainer = styled.div`
   align-items: center;
   text-align: center;
   background: white;
-  padding: 10px;
-  border-radius: 12px;
+  padding: 0;
+  border-radius: 10px;
   svg,
   canvas {
-    border-radius: 8px;
-    width: 180px !important;
-    height: 180px !important;
+    border-radius: 6px;
+    max-width: 100% !important;
+    height: auto !important;
   }
 `;
-const QRBadge = styled.div`
-  background-color: oklch(48.82% 0.211 26.43);
+
+const QRBadge = styled.a`
+  background-color: #C80000;
   color: white;
-  padding: 6px 16px;
+  padding: 10px 20px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 10px oklch(48.82% 0.211 26.43 / 20%);
-  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(200, 0, 0, 0.25);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  margin-top: 8px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(200, 0, 0, 0.3);
+    color: white;
+  }
 `;
 
 export default QRSection;
