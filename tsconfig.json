@@ -1,6 +1,17 @@
 {
-
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./app/*"
+      ],
+      "@/icon-name": [
+        "./app/components/ui/icons/types.ts"
+      ],
+      "@/rr/*": [
+        "./.react-router/types/app/*"
+      ]
+    },
     "target": "es5",
     "lib": [
       "dom",
@@ -20,12 +31,12 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": [
+      "./node_modules/@types",
+      "./app/types"
+    ]
   },
-
-  
   "include": [
-    "src"
+    "app"
   ]
 }
-

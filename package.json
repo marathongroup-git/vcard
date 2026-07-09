@@ -4,7 +4,10 @@
   "homepage": "https://marathongroup-git.github.io/vcard/",
   "private": true,
   "dependencies": {
+    "@base-ui/react": "^1.6.0",
     "@google/generative-ai": "^0.24.1",
+    "@sly-cli/sly": "^2.1.1",
+    "@tailwindcss/postcss": "^4.3.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -13,25 +16,33 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
+    "esbuild": "^0.28.1",
     "html2canvas": "^1.4.1",
     "qr-code-styling": "^1.9.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.13.0",
-    "react-scripts": "^5.0.1",
     "styled-components": "^6.1.18",
-    "typescript": "^4.9.5",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.2",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^7.0.2",
     "vcard-creator": "^0.7.2",
+    "vite-plugin-icons-spritesheet": "^3.1.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "vite",
+    "start": "vite",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "deploy": "gh-pages -d dist",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "icon": "bunx @sly-cli/sly add lucide-icons"
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +63,10 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "@tailwindcss/vite": "^4.3.2",
+    "@vitejs/plugin-react": "^6.0.3",
+    "gh-pages": "^6.3.0",
+    "vite": "^8.1.4",
+    "vite-tsconfig-paths": "^6.1.1"
   }
 }

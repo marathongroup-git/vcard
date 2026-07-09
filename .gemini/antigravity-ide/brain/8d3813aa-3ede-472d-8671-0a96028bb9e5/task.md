@@ -1,0 +1,6 @@
+- `[x]` Eliminar `react-scripts` e instalar dependencias de Vite.
+- `[x]` Mover y ajustar `index.html`.
+- `[x]` Actualizar scripts en `package.json`.
+- `[x]` Crear archivo de configuración `vite.config.ts`.
+- `[x]` Configurar tipos de Vite.
+- `[x]` Verificar el proyecto localmente.

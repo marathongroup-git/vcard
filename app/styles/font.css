@@ -1,0 +1,53 @@
+/* ─── Inter Variable ─────────────────────────────────────────────────
+ * Pesos 100-900 + optical-size automático. Italic real via archivo aparte.
+ * Inter v4+ folded el "Display" en el eje opsz del archivo principal,
+ * por eso .font-inter-display reusa Inter — font-optical-sizing: auto
+ * elige la variante correcta según el tamaño.
+ */
+@font-face {
+	font-family: "Inter";
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src:
+		url("/fonts/Inter/InterVariable.woff2") format("woff2-variations"),
+		url("/fonts/Inter/InterVariable.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Inter";
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src:
+		url("/fonts/Inter/InterVariable-Italic.woff2") format("woff2-variations"),
+		url("/fonts/Inter/InterVariable-Italic.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Inter Fallback";
+	src: local("Arial");
+	ascent-override: 90.20%;
+	descent-override: 22.48%;
+	line-gap-override: 0.00%;
+	size-adjust: 107.40%;
+}
+
+.font-inter-display {
+	font-family: "Inter", "Inter Fallback", sans-serif;
+}
+
+/* Activa optical-size automático y mejora antialiasing */
+html {
+	font-optical-sizing: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+	font-family: "Jetbrains Mono";
+	font-style: normal;
+	font-weight: normal;
+	font-display: swap;
+	src: url("/fonts/jetbrains-mono/JetBrainsMono-Regular.ttf") format("truetype");
+}
