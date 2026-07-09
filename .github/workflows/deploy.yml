@@ -15,18 +15,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: 20
-          cache: 'npm'
+          bun-version: latest
 
       # 1. Main App
       - name: Install Main App Dependencies
-        run: npm ci
+        run: bun install
 
       - name: Build Main App
-        run: npm run build
+        run: bun run build
         env:
           CI: false
 
@@ -41,10 +40,10 @@ jobs:
 
       # 3. Merge
       - name: Merge Documentation into Build
-        run: mv documentation/build build/documentation
+        run: mv documentation/build dist/documentation || true
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build
+          folder: dist
           branch: gh-pages
