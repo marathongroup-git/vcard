@@ -13,7 +13,7 @@ import { cn } from '@/utils/misc'
 // NOTA: usamos ?rev= y NO ?v=, porque ?v= es un parámetro reservado por Vite
 // (versiona dependencias) y rompe la carga del sprite en el dev server.
 const SPRITE_VERSION = '2'
-const spriteHref = `/icons/sprite.svg?rev=${SPRITE_VERSION}`
+const spriteHref = `${process.env.PUBLIC_URL || ''}/icons/sprite.svg?rev=${SPRITE_VERSION}`
 
 const sizeClassName = {
 	font: 'size-[1em]',
